@@ -155,43 +155,55 @@ def execute_api(api):
         if retry != "y":
             break
 
+        api["inputs"] = {}
+
 # ========== API FLOW ==========
 apis = [
-    {"name": "getCspMappedCompanies",
+
+    # {"name": "Get ALL CSP Companies",
+    #  "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies",
+    #  "required_inputs": [], "optional_params": ["connectionId"], "inputs": {}},
+
+    {"name": "Get CSP Mapped Companies HYBR Tenant Subscriptions",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspMappedCompanies",
      "required_inputs": [], "optional_params": ["connectionId"], "inputs": {}},
 
-    {"name": "getCspCustomerProfileBySubscriptionId",
+    # {"name": "AdminHybrCompanySubscriptions",
+    #  "path": "/api/integrations/{{appId}}/admin/service/core/companies/{{companyId}}/subscriptions",
+    #  "required_inputs": [("Company ID", "companyId")],
+    #  "optional_params": ["connectionId"], "inputs": {}},
+
+    {"name": "Get CSP Customer Profile By HYBR Subscription ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerProfileBySubscriptionId/{{tenant_sub_id}}",
      "required_inputs": [("Tenant Subscription ID", "tenant_sub_id")],
      "optional_params": ["connectionId"], "inputs": {}},
 
-    {"name": "getCspCustomerSubscriptionsByType",
-     "path": "{sub_path}",
-     "required_inputs": [("Tenant Subscription ID", "tenant_sub_id"), ("Tenant ID", "tenant_id")],
-     "optional_params": ["subscriptionType", "status"],
-     "reference_values": {
-         "subscriptionType": ["ServiceProvider", "Reseller", "Customer"],
-         "status": ["1 - Active", "2 - Suspended", "3 - Deleted", "6 - Disabled"]
-     }, "inputs": {}},
+    # {"name": "getCspCustomerSubscriptionsByType",
+    #  "path": "{sub_path}",
+    #  "required_inputs": [("Tenant Subscription ID", "tenant_sub_id"), ("Tenant ID", "tenant_id")],
+    #  "optional_params": ["subscriptionType", "status"],
+    #  "reference_values": {
+    #      "subscriptionType": ["ServiceProvider", "Reseller", "Customer"],
+    #      "status": ["1 - Active", "2 - Suspended", "3 - Deleted", "6 - Disabled"]
+    #  }, "inputs": {}},
 
-    {"name": "getcspCustomerLicenses",
+    {"name": "Get CSP Customer Licenses By CSP Customer ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/licenses/getCustomerLicenses/{{customer_id}}",
      "required_inputs": [("Customer ID", "customer_id")],
      "optional_params": ["page", "page_Size"],
      "inputs": {}},
 
-    {"name": "cspProductTypes",
+    {"name": "Get CSP Product Types By HYBR Tenant Subscription ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/cspProductTypes/{{tenant_subscription_id}}",
      "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id")],
      "optional_params": ["connectionId"], "inputs": {}},
 
-    {"name": "getCspCategories",
+    {"name": "Get CSP Categories By HYBR Tenant Subscription ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCategories/{{tenant_subscription_id}}",
      "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id")],
      "optional_params": ["connectionId"], "inputs": {}},
 
-    {"name": "getCspOffersBySubscriptionIdFromDb",
+    {"name": "Get CSP Offers By HYBR Tenant Subscription ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
      "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id"), ("Customer ID", "customer_id")],
      "optional_params": ["connectionId", "productTypes", "reservationProductTypes", "cspOfferCategories", "offerType", "segments", "search", "skip", "take"],
