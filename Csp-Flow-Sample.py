@@ -16,6 +16,8 @@ parser.add_argument('--base-url', help='Base URL for the API')
 parser.add_argument('--app-id', help='Application ID')
 parser.add_argument('--username', help='Username')
 parser.add_argument('--password', help='Password')
+parser.add_argument('--tenant-subscription-id', help='Default tenant subscription ID')
+parser.add_argument('--customer-id', help='Default customer ID')
 args = parser.parse_args()
 
 # Get values from command line or prompt user
@@ -23,6 +25,11 @@ BASE_URL = args.base_url if args.base_url else input("Enter base URL (e.g. https
 APP_ID = args.app_id if args.app_id else input("Enter application ID: ").strip()
 USERNAME = args.username if args.username else input("Enter username: ").strip()
 PASSWORD = args.password if args.password else getpass.getpass("Enter password: ").strip()
+
+# Default values and memory
+DEFAULT_TENANT_SUB_ID = getattr(args, 'tenant_subscription_id', None)
+DEFAULT_CUSTOMER_ID = getattr(args, 'customer_id', None)
+remembered_values = {}
 
 # -------------------------
 # Reference product types
@@ -105,10 +112,35 @@ def execute_api(api):
         # Prompt required inputs
         for inp_name, inp_key in api.get("required_inputs", []):
             if inp_key not in api["inputs"]:
-                inp_val = input(f"Enter {inp_name} (or 'skip'): ").strip()
+                # Check for default or remembered values
+                default_val = None
+                if inp_key == "tenant_subscription_id":
+                    default_val = remembered_values.get("tenant_subscription_id") or DEFAULT_TENANT_SUB_ID
+                elif inp_key == "customer_id":
+                    default_val = remembered_values.get("customer_id") or DEFAULT_CUSTOMER_ID
+                
+                prompt = f"Enter {inp_name}"
+                if default_val:
+                    prompt += f" (default: {default_val})"
+                prompt += " (or 'skip'): "
+                
+                inp_val = input(prompt).strip()
                 if inp_val.lower() == "skip":
                     print("⏭️ Skipped this API.")
                     return
+                
+                # Use default if no input provided
+                if not inp_val and default_val:
+                    inp_val = default_val
+                
+                if not inp_val:
+                    print(f"❌ {inp_name} is required.")
+                    continue
+                
+                # Remember the value for future use
+                if inp_key in ["tenant_subscription_id", "customer_id"]:
+                    remembered_values[inp_key] = inp_val
+                
                 api["inputs"][inp_key] = urllib.parse.quote_plus(inp_val)
 
         # Handle dynamic sub_path
