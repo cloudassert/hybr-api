@@ -121,15 +121,15 @@ def execute_api(api):
 ##            print("5️⃣ SaaS Marketplace Offers")
             choice = input("Enter your choice (1/2/3/4/5): ").strip()
             if choice == "1":
-                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerAzureSubscriptions/{{tenant_sub_id}}/{{tenant_id}}"
+                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerAzureSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
             elif choice == "2":
-                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getAzureReservations/{{tenant_sub_id}}/{{tenant_id}}"
+                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getAzureReservations/{{tenant_subscription_id}}/{{customer_id}}"
             elif choice == "3":
-                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptions/{{tenant_sub_id}}/{{tenant_id}}"
+                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
 ##            elif choice == "4":
-##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSoftwareSubscriptions/{{tenant_sub_id}}/{{tenant_id}}"
+##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSoftwareSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
 ##            elif choice == "5":
-##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptionsForMarketplace/{{tenant_sub_id}}/{{tenant_id}}"
+##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptionsForMarketplace/{{tenant_subscription_id}}/{{customer_id}}"
             else:
                 print("❌ Invalid choice. Skipping API.")
                 return
@@ -174,18 +174,18 @@ apis = [
     #  "optional_params": ["connectionId"], "inputs": {}},
 
     {"name": "Get CSP Customer Profile By HYBR Subscription ID",
-     "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerProfileBySubscriptionId/{{tenant_sub_id}}",
-     "required_inputs": [("Tenant Subscription ID", "tenant_sub_id")],
+     "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerProfileBySubscriptionId/{{tenant_subscription_id}}",
+     "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id")],
      "optional_params": ["connectionId"], "inputs": {}},
 
-    # {"name": "getCspCustomerSubscriptionsByType",
-    #  "path": "{sub_path}",
-    #  "required_inputs": [("Tenant Subscription ID", "tenant_sub_id"), ("Tenant ID", "tenant_id")],
-    #  "optional_params": ["subscriptionType", "status"],
-    #  "reference_values": {
-    #      "subscriptionType": ["ServiceProvider", "Reseller", "Customer"],
-    #      "status": ["1 - Active", "2 - Suspended", "3 - Deleted", "6 - Disabled"]
-    #  }, "inputs": {}},
+    {"name": "getCspCustomerSubscriptionsByType",
+     "path": "{sub_path}",
+     "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id"), ("Customer ID", "customer_id")],
+     "optional_params": ["subscriptionType", "status"],
+     "reference_values": {
+         "subscriptionType": ["ServiceProvider", "Reseller", "Customer"],
+         "status": ["1 - Active", "2 - Suspended", "3 - Deleted", "6 - Disabled"]
+     }, "inputs": {}},
 
     {"name": "Get CSP Customer Licenses By CSP Customer ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/licenses/getCustomerLicenses/{{customer_id}}",
