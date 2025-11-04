@@ -165,125 +165,156 @@ def initialize_subscription_context():
 
 # ========== EXECUTE API ==========
 def execute_api(api):
+    import urllib.parse
     print(f"\n➡️  Executing API: {api['name']}")
     print_context()
 
-    # Fill required inputs
-    for inp_name, inp_key in api.get("required_inputs", []):
-        if inp_key not in api["inputs"] or inp_key in api["inputs"]:
-            remembered_val = remembered_values.get(inp_key)
-            prompt = f"Enter {inp_name}"
-            if remembered_val:
-                prompt += f" (default: {remembered_val})"
-            prompt += " (or 'skip'): "
-            val = input(prompt).strip()
+    if api['name'] == "Get CSP Offers By HYBR Tenant Subscription ID":
+        print("\nReference product types:\n", SOFTWARE_PRODUCT_TYPES + NCE_PRODUCT_TYPES + AZURE_RESERVATION_PRODUCT_TYPES)
+        print("\n")
 
-            if val.lower() == "skip":
-                print("⏭️ Skipped this API.")
+    while True:
+        # --- Collect required inputs ---
+        for inp_name, inp_key in api.get("required_inputs", []):
+            if inp_key not in api["inputs"]:
+                # Default and remembered values
+                default_val = remembered_values.get(inp_key)
+                if inp_key == "tenant_subscription_id":
+                    default_val = default_val or DEFAULT_TENANT_SUB_ID
+                elif inp_key == "customer_id":
+                    default_val = default_val or DEFAULT_CUSTOMER_ID
+
+                prompt = f"Enter {inp_name}"
+                if default_val:
+                    prompt += f" (default: {default_val})"
+                prompt += " (or 'skip'): "
+
+                val = input(prompt).strip()
+
+                if val.lower() == "skip":
+                    print("⏭️ Skipped this API.")
+                    return
+
+                if not val and default_val:
+                    val = default_val
+                if not val:
+                    print(f"❌ {inp_name} is required.")
+                    continue
+
+                # Remember and encode inputs
+                remembered_values[inp_key] = val
+                api["inputs"][inp_key] = urllib.parse.quote_plus(val)
+
+        # --- Handle special sub-path logic ---
+        if api["name"] == "getCspCustomerSubscriptionsByType":
+            print("\nSelect subscription type:")
+            print("1️⃣ Azure Subscriptions")
+            print("2️⃣ Azure Reservations")
+            print("3️⃣ CSP Subscriptions (NCE/Software/SaaS)")
+            choice = input("Enter your choice (1/2/3): ").strip()
+
+            sub_paths = {
+                "1": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerAzureSubscriptions/{{tenant_subscription_id}}/{{customer_id}}",
+                "2": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getAzureReservations/{{tenant_subscription_id}}/{{customer_id}}",
+                "3": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
+            }
+
+            api["inputs"]["sub_path"] = sub_paths.get(choice)
+            if not api["inputs"]["sub_path"]:
+                print("❌ Invalid choice. Skipping API.")
                 return
-            if not val and remembered_val:
-                val = remembered_val
 
-            if not val:
-                print(f"❌ {inp_name} is required.")
-                return
+        # --- Optional parameters ---
+        params = prompt_optional_params(
+            api.get("optional_params", []),
+            reference_dict=api.get("reference_values"),
+            product_type=api["inputs"].get("productTypes")
+        )
 
-            api["inputs"][inp_key] = val
-            remembered_values[inp_key] = val
+        # --- Build final URL ---
+        final_path = api["inputs"].get("sub_path", api["path"])
+        try:
+            url = build_url(final_path, api["inputs"])
+        except KeyError as e:
+            print(f"❌ Missing required input for URL: {e}")
+            return
 
-    # Prompt for optional params
-    params = prompt_optional_params(api.get("optional_params", []))
+        # --- Add remaining inputs as query params ---
+        for key, val in api["inputs"].items():
+            if val and f"{{{{{key}}}}}" not in final_path and key not in params:
+                params[key] = val
 
-    # Build URL and add query params
-    url = build_url(api["path"], api["inputs"])
-    for k, v in api["inputs"].items():
-        if f"{{{k}}}" not in api["path"] and k not in params:
-            params[k] = v
+        # --- Execute API request ---
+        res = make_request(url, params=params)
+        print(f"\n📘 {api['name']} Result:\n", json.dumps(res, indent=2))
 
-    result = make_request(url, params=params)
-    print(f"\n📘 Result:\n", json.dumps(result, indent=2))
+        retry = input("\nRun this API again with different inputs? (y/n): ").strip().lower()
+        if retry != "y":
+            break
+        api["inputs"] = {}
 
 ##def execute_api(api):
-##    print(f"\n➡️  {api['name']}")
-##    while True:
-##        # Collect required inputs
-##        for inp_name, inp_key in api.get("required_inputs", []):
-##            if inp_key not in api["inputs"]:
-##                default_val = None
-##                if inp_key == "tenant_subscription_id":
-##                    default_val = remembered_values.get("tenant_subscription_id") or DEFAULT_TENANT_SUB_ID
-##                elif inp_key == "customer_id":
-##                    default_val = remembered_values.get("customer_id") or DEFAULT_CUSTOMER_ID
+##    print(f"\n➡️  Executing API: {api['name']}")
+##    print_context()
 ##
-##                prompt = f"Enter {inp_name}"
-##                if default_val:
-##                    prompt += f" (default: {default_val})"
-##                prompt += " (or 'skip'): "
-##                inp_val = input(prompt).strip()
+##    # Fill required inputs
+##    for inp_name, inp_key in api.get("required_inputs", []):
+##        if inp_key not in api["inputs"] or inp_key in api["inputs"]:
+##            remembered_val = remembered_values.get(inp_key)
+##            prompt = f"Enter {inp_name}"
+##            if remembered_val:
+##                prompt += f" (default: {remembered_val})"
+##            prompt += " (or 'skip'): "
+##            val = input(prompt).strip()
 ##
-##                if inp_val.lower() == "skip":
-##                    print("⏭️ Skipped this API.")
-##                    return
+##            if val.lower() == "skip":
+##                print("⏭️ Skipped this API.")
+##                return
+##            if not val and remembered_val:
+##                val = remembered_val
 ##
-##                if not inp_val and default_val:
-##                    inp_val = default_val
-##                if not inp_val:
-##                    print(f"❌ {inp_name} is required.")
-##                    continue
-##
-##                # Remember tenant or customer IDs
-##                if inp_key in ["tenant_subscription_id", "customer_id"]:
-##                    remembered_values[inp_key] = inp_val
-##
-##                api["inputs"][inp_key] = urllib.parse.quote_plus(inp_val)
-##
-##        # Special case handling for subscription-type API
-##        if api["name"] == "getCspCustomerSubscriptionsByType":
-##            print("\nSelect subscription type:")
-##            print("1️⃣ Azure Subscriptions")
-##            print("2️⃣ Azure Reservations")
-##            print("3️⃣ CSP Subscriptions like NCE, Software and Other SaaS products..")
-##            choice = input("Enter your choice (1/2/3): ").strip()
-##            if choice == "1":
-##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerAzureSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
-##            elif choice == "2":
-##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getAzureReservations/{{tenant_subscription_id}}/{{customer_id}}"
-##            elif choice == "3":
-##                api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
-##            else:
-##                print("❌ Invalid choice. Skipping API.")
+##            if not val:
+##                print(f"❌ {inp_name} is required.")
 ##                return
 ##
-##        # Collect optional params
-##        params = prompt_optional_params(
-##            api.get("optional_params", []),
-##            reference_dict=api.get("reference_values"),
-##            product_type=api["inputs"].get("productTypes")
-##        )
+##            api["inputs"][inp_key] = val
+##            remembered_values[inp_key] = val
 ##
-##        # Determine final path
-##        final_path = api["inputs"].get("sub_path", api["path"])
-##
-##        try:
-##            url = build_url(final_path, api["inputs"])
-##        except KeyError as e:
-##            print(f"❌ Missing required input for URL: {e}")
+##    # Special case handling for subscription-type API
+##    if api["name"] == "getCspCustomerSubscriptionsByType":
+##        print("\nSelect subscription type:")
+##        print("1️⃣ Azure Subscriptions")
+##        print("2️⃣ Azure Reservations")
+##        print("3️⃣ CSP Subscriptions like NCE, Software and Other SaaS products..")
+##        choice = input("Enter your choice (1/2/3): ").strip()
+##        if choice == "1":
+##            api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerAzureSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
+##        elif choice == "2":
+##            api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getAzureReservations/{{tenant_subscription_id}}/{{customer_id}}"
+##        elif choice == "3":
+##            api["inputs"]["sub_path"] = "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerSubscriptions/{{tenant_subscription_id}}/{{customer_id}}"
+##        else:
+##            print("❌ Invalid choice. Skipping API.")
 ##            return
+##    # Prompt for optional params
+##    params = prompt_optional_params(api.get("optional_params", []))
+##    # Collect optional params
+##    params = prompt_optional_params(
+##        api.get("optional_params", []),
+##        reference_dict=api.get("reference_values", []))
 ##
-##        # ✅ Add required inputs that are NOT part of the path as query params
-##        for key, val in api["inputs"].items():
-##            if val and f"{{{{{key}}}}}" not in final_path and key not in params:
-##                params[key] = val
+##    # Build URL and add query params
+##    url = build_url(api["path"], api["inputs"])
+##    print(url)
+##    for k, v in api["inputs"].items():
+##        if f"{{{k}}}" not in api["path"] and k not in params:
+##            params[k] = v
 ##
-##        # Make request
-##        res = make_request(url, params=params)
-##
-##        print(f"\n📘 {api['name']} Result:\n", json.dumps(res, indent=2))
-##
-##        retry = input("\nRun this API again with different inputs? (y/n): ").strip().lower()
-##        if retry != "y":
-##            break
-##        api["inputs"] = {}
+##    print(params)
+##    print(url)
+##    result = make_request(url, params=params)
+##    print(f"\n📘 Result:\n", json.dumps(result, indent=2))
+
 # ========== API GROUPS ==========
 
 MS_CSP_APIS = [
@@ -297,7 +328,7 @@ MS_CSP_APIS = [
      "optional_params": ["connectionId"], "inputs": {}},
 
     {"name": "getCspCustomerSubscriptionsByType",
-     "path": "{sub_path}",
+     "path": "{{sub_path}}",
      "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id"), ("Customer ID", "customer_id")],
      "optional_params": ["subscriptionType", "status"],
      "reference_values": {
@@ -322,8 +353,8 @@ MS_CSP_APIS = [
 
     {"name": "Get CSP Offers By HYBR Tenant Subscription ID",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
-     "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id"), ("Customer ID", "customer_id")],
-     "optional_params": ["connectionId", "productTypes", "reservationProductTypes", "cspOfferCategories", "offerType", "segments", "search", "skip", "take"],
+     "required_inputs": [("Tenant Subscription ID", "tenant_subscription_id"), ("Customer ID", "customer_id"), ("productTypes", "productTypes")],
+     "optional_params": ["connectionId", "reservationProductTypes", "cspOfferCategories", "offerType", "segments", "search", "skip", "take"],
      "reference_values": {
          "productTypes": SOFTWARE_PRODUCT_TYPES + NCE_PRODUCT_TYPES + AZURE_RESERVATION_PRODUCT_TYPES,
          "reservationProductTypes": AZURE_RESERVATION_TYPES,
