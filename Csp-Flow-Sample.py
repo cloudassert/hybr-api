@@ -369,6 +369,7 @@ REPORT_APIS = [
     {"name": "Get Subscriptions and their Relationships",
      "path": "/api/integrations/{{appId}}/admin/service/core/subscriptions/subscriptionRelationships",
      "inputs": {}},
+    
     {"name": "List Available Currency Codes", "path": "/api/integrations/{{appId}}/admin/service/billing/csp/reports/availableCurrencySymbols",
      "required_inputs": [("Month", "month"), ("Year", "year")],
      "optional_params": ["parentSubscriptionId"], "inputs": {}},
@@ -382,6 +383,7 @@ REPORT_APIS = [
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/reports/topCustomersByRevenue",
      "required_inputs": [("Month", "month"), ("Year", "year"), ("Number Of Items", "numberOfItems"), ("Currency", "currency")],
      "optional_params": ["parentSubscriptionId"], "inputs": {}},
+    
     {"name": "Monthly Reseller Margin",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/reports/monthlyResellerMargin",
      "required_inputs": [("Month", "month"), ("Year", "year"), ("Currency", "currency")],
@@ -399,7 +401,7 @@ REPORT_APIS = [
 
     {"name": "Monthly Products Reseller Margin By Subscription",
      "path": "/api/integrations/{{appId}}/admin/service/billing/csp/reports/monthlyProductsResellerMarginBySubscription",
-     "required_inputs": [("Tenant Subscription ID", "customerSubscriptionId"), ("Month", "month"), ("Year", "year")],
+     "required_inputs": [("Month", "month"), ("Year", "year"), ("Tenant Subscription ID", "customerSubscriptionId"), ("Currency", "currency")],
      "inputs": {}},
 
      #{"name": "Monthly Subscription Reseller Margin By Product",
