@@ -162,6 +162,94 @@ def initialize_subscription_context():
 
     print("\n✅ Subscription Context Initialized Successfully.\n")
 
+def collect_csp_data():
+    print("\n🔹 Collecting CSP Data for All Mapped Companies...")
+
+    # Step 1: Get all CSP mapped companies
+    mapped_companies_url = build_url("/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspMappedCompanies")
+    mapped_companies = make_request(mapped_companies_url)
+
+    if not mapped_companies or not isinstance(mapped_companies, list):
+        print("❌ No mapped companies found or API error.")
+        return
+
+    all_data = []
+
+    for company in mapped_companies:
+        company_data = {"company": company, "customer_profile": None, "licenses": None, "offers": []}
+        tenant_subscription_id = company.get("id")
+
+        if not tenant_subscription_id:
+            print(f"❌ Skipping company {company.get('Name', 'Unnamed')} due to missing TenantSubscriptionId.")
+            continue
+
+        # Step 2: Get customer profile by subscription ID
+        customer_profile_url = build_url(
+            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerProfileBySubscriptionId/{{tenant_subscription_id}}",
+            {"tenant_subscription_id": tenant_subscription_id}
+        )
+        customer_profile = make_request(customer_profile_url)
+        company_data["customer_profile"] = customer_profile
+
+        customer_id = customer_profile[0].get("Id") if customer_profile else None
+        if not customer_id:
+            print(f"❌ Skipping company {company.get('Name', 'Unnamed')} due to missing CustomerId.")
+            continue
+
+        # Step 3: Get customer licenses by CSP customer ID
+        licenses_url = build_url(
+            "/api/integrations/{{appId}}/admin/service/billing/csp/licenses/getCustomerLicenses/{{customer_id}}",
+            {"customer_id": customer_id}
+        )
+        licenses = make_request(licenses_url)
+        company_data["licenses"] = licenses
+
+        # Step 4: Get product types and categories
+        product_types_url = build_url(
+            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/cspProductTypes/{{tenant_subscription_id}}",
+            {"tenant_subscription_id": tenant_subscription_id}
+        )
+        product_types = make_request(product_types_url)
+
+        # push OnlineServicesNCE to product_types
+        if product_types and isinstance(product_types, list):
+            if "OnlineServicesNCE" not in product_types:
+                product_types.append("OnlineServicesNCE")
+
+        categories_url = build_url(
+            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCategories/{{tenant_subscription_id}}",
+            {"tenant_subscription_id": tenant_subscription_id}
+        )
+        categories = make_request(categories_url)
+
+        # Step 5: Get CSP offers for each product type and category
+        if product_types and isinstance(product_types, list) and categories and isinstance(categories, list):
+            for product_type in product_types:
+                for category in categories:
+                    offers_url = build_url(
+                        "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
+                        {
+                            "tenant_subscription_id": tenant_subscription_id,
+                            "customer_id": customer_id,
+                            "productTypes": product_type,
+                            "cspOfferCategories": category
+                        }
+                    )
+                    offers = make_request(offers_url)
+                    company_data["offers"].append({
+                        "product_type": product_type,
+                        "category": category,
+                        "offers": offers
+                    })
+
+        all_data.append(company_data)
+
+    # Step 6: Write the collected data to a JSON file
+    output_file = "csp_data.json"
+    with open(output_file, "w") as f:
+        json.dump(all_data, f, indent=2)
+
+    print(f"\n✅ CSP Data collected successfully. Output written to {output_file}")
 
 # ========== EXECUTE API ==========
 def execute_api(api):
@@ -420,7 +508,8 @@ print("\n🔹 CSP API Interactive CLI\n")
 print("Select API Group:")
 print("1️⃣ Microsoft CSP APIs")
 print("2️⃣ Reports APIs")
-group_choice = input("Enter choice (1/2): ").strip()
+print("3️⃣ Collect CSP Data for All Mapped Companies")
+group_choice = input("Enter choice (1/2/3): ").strip()
 
 if group_choice == "1":
     selected_apis = MS_CSP_APIS
@@ -430,6 +519,9 @@ elif group_choice == "2":
     print("\n🟨 Selected Group: Reports APIs")
     # Step 1: Initialize subscription context (only once)
     initialize_subscription_context()
+elif group_choice == "3":
+    collect_csp_data()
+    exit()
 else:
     print("❌ Invalid choice.")
     exit()
