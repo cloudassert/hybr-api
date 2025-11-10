@@ -59,7 +59,7 @@ def make_request(url, method="GET", params=None):
 
     if params:
         url += "?" + urllib.parse.urlencode(params)
-
+    
     req = urllib.request.Request(url, headers=headers, method=method)
     try:
         with urllib.request.urlopen(req) as res:
@@ -165,8 +165,9 @@ def initialize_subscription_context():
 def collect_csp_data():
     print("\n🔹 Collecting CSP Data for All Mapped Companies...")
 
-    # Step 1: Get all CSP mapped companies
-    mapped_companies_url = build_url("/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspMappedCompanies")
+    mapped_companies_url = build_url(
+        "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspMappedCompanies"
+    )
     mapped_companies = make_request(mapped_companies_url)
 
     if not mapped_companies or not isinstance(mapped_companies, list):
@@ -175,68 +176,133 @@ def collect_csp_data():
 
     all_data = []
 
+    PRODUCT_TYPES = [
+        "Software Subscription",
+        "OnlineServicesNCE",
+        "License"
+    ]
+
     for company in mapped_companies:
-        company_data = {"company": company, "customer_profile": None, "licenses": None, "offers": []}
+        company_name = company.get("text", "Unnamed")
         tenant_subscription_id = company.get("id")
 
         if not tenant_subscription_id:
-            print(f"❌ Skipping company {company.get('Name', 'Unnamed')} due to missing TenantSubscriptionId.")
+            print(f"❌ Skipping company {company_name} due to missing TenantSubscriptionId.")
             continue
 
-        # Step 2: Get customer profile by subscription ID
+        print(f"\n🏢 Processing Company: {company_name}")
+
+        # Step 2: Get customer profile
         customer_profile_url = build_url(
             "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCustomerProfileBySubscriptionId/{{tenant_subscription_id}}",
             {"tenant_subscription_id": tenant_subscription_id}
         )
         customer_profile = make_request(customer_profile_url)
-        company_data["customer_profile"] = customer_profile
-
         customer_id = customer_profile[0].get("Id") if customer_profile else None
+
         if not customer_id:
-            print(f"❌ Skipping company {company.get('Name', 'Unnamed')} due to missing CustomerId.")
+            print(f"❌ Skipping {company_name} — missing CustomerId.")
             continue
 
-        # Step 3: Get customer licenses by CSP customer ID
+        # Step 3: Get licenses
         licenses_url = build_url(
             "/api/integrations/{{appId}}/admin/service/billing/csp/licenses/getCustomerLicenses/{{customer_id}}",
             {"customer_id": customer_id}
         )
         licenses = make_request(licenses_url)
-        company_data["licenses"] = licenses
 
-        # Step 4: Get product types and categories
-        # product_types_url = build_url(
-        #     "/api/integrations/{{appId}}/admin/service/billing/csp/companies/cspProductTypes/{{tenant_subscription_id}}",
-        #     {"tenant_subscription_id": tenant_subscription_id}
-        # )
-        # product_types = make_request(product_types_url)
+        # Step 4: Initialize company data
+        company_data = {
+            "company_name": company_name,
+            "tenant_subscription_id": tenant_subscription_id,
+            "customer_id": customer_id,
+            "customer_profile": customer_profile,
+            "licenses": licenses,
+            "Products": []  # ✅ Initialize this list properly
+        }
 
-        # push OnlineServicesNCE to product_types
-        # if product_types and isinstance(product_types, list):
-        #     if "OnlineServicesNCE" not in product_types:
-        #         product_types.append("OnlineServicesNCE")
+        # Step 5: Fetch offers per product type
+        for ptype in PRODUCT_TYPES:
+            offers_url = build_url(
+                "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
+                {
+                    "tenant_subscription_id": tenant_subscription_id,
+                    "customer_id": customer_id
+                }
+            )
 
-        # categories_url = build_url(
-        #     "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCategories/{{tenant_subscription_id}}",
-        #     {"tenant_subscription_id": tenant_subscription_id}
-        # )
-        # categories = make_request(categories_url)
+            query_params = {"productTypes": ptype}
+            print(f"   🔹 Fetching offers for product type: {ptype}")
 
-        # Step 5: Get CSP offers for each product type and category
-       
-        offers_url = build_url(
-            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
-            {
-                "tenant_subscription_id": tenant_subscription_id,
-                "customer_id": customer_id,
-                "productTypes": "OnlineServicesNCE",
-            }
-        )
-        offers = make_request(offers_url)
-        company_data["offers"].append({
-            "product_type": "OnlineServicesNCE",
-            "offers": offers
-        })
+            offers = make_request(offers_url, params=query_params)
+
+            company_data["Products"].append({
+                "product_types": ptype,
+                "offers": offers
+            })
+
+        # Dummy product types
+        DUMMY_PRODUCT_TYPES = [
+            "Datacenter Resources (VMs)",
+            "Training Programs",
+            "Support Services"
+        ]
+        #Add dummy product categories with 1–2 offers each
+        import random
+        for dptype in DUMMY_PRODUCT_TYPES:
+            if dptype == "Datacenter Resources (VMs)":
+                print(f"   🔹 Fetching offers for product type: {dptype}")
+                offers = [
+                    {
+                        "OfferName": "Standard D2s v3",
+                        "Description": "2 vCPUs, 8GB RAM — general-purpose VM for app hosting.",
+                        "Price": 75.0,
+                        "Currency": "USD"
+                    },
+                    {
+                        "OfferName": "Premium SSD Storage 512GB",
+                        "Description": "High-performance block storage for production workloads.",
+                        "Price": 45.0,
+                        "Currency": "USD"
+                    }
+                ]
+            elif dptype == "Training Programs":
+                print(f"   🔹 Fetching offers for product type: {dptype}")
+                offers = [
+                    {
+                        "OfferName": "Azure Fundamentals (AZ-900)",
+                        "Description": "Introductory Microsoft certification program for cloud basics.",
+                        "Price": 120.0,
+                        "Currency": "USD"
+                    },
+                    {
+                        "OfferName": "Kubernetes Essentials Workshop",
+                        "Description": "Hands-on training on container orchestration with Kubernetes.",
+                        "Price": 400.0,
+                        "Currency": "USD"
+                    }
+                ]
+            elif dptype == "Support Services":
+                print(f"   🔹 Fetching offers for product type: {dptype}")
+                offers = [
+                    {
+                        "OfferName": "24x7 Priority Support",
+                        "Description": "Round-the-clock technical assistance with 1-hour SLA.",
+                        "Price": 600.0,
+                        "Currency": "USD"
+                    },
+                    {
+                        "OfferName": "Backup and Disaster Recovery Support",
+                        "Description": "Managed backup and failover service with DR testing.",
+                        "Price": 300.0,
+                        "Currency": "USD"
+                    }
+                ]
+
+            company_data["Products"].append({
+                "product_types": dptype,
+                "offers": offers
+            })
 
         all_data.append(company_data)
 
@@ -246,6 +312,7 @@ def collect_csp_data():
         json.dump(all_data, f, indent=2)
 
     print(f"\n✅ CSP Data collected successfully. Output written to {output_file}")
+
 
 # ========== EXECUTE API ==========
 def execute_api(api):
