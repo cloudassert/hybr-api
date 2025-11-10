@@ -205,42 +205,38 @@ def collect_csp_data():
         company_data["licenses"] = licenses
 
         # Step 4: Get product types and categories
-        product_types_url = build_url(
-            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/cspProductTypes/{{tenant_subscription_id}}",
-            {"tenant_subscription_id": tenant_subscription_id}
-        )
-        product_types = make_request(product_types_url)
+        # product_types_url = build_url(
+        #     "/api/integrations/{{appId}}/admin/service/billing/csp/companies/cspProductTypes/{{tenant_subscription_id}}",
+        #     {"tenant_subscription_id": tenant_subscription_id}
+        # )
+        # product_types = make_request(product_types_url)
 
         # push OnlineServicesNCE to product_types
-        if product_types and isinstance(product_types, list):
-            if "OnlineServicesNCE" not in product_types:
-                product_types.append("OnlineServicesNCE")
+        # if product_types and isinstance(product_types, list):
+        #     if "OnlineServicesNCE" not in product_types:
+        #         product_types.append("OnlineServicesNCE")
 
-        categories_url = build_url(
-            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCategories/{{tenant_subscription_id}}",
-            {"tenant_subscription_id": tenant_subscription_id}
-        )
-        categories = make_request(categories_url)
+        # categories_url = build_url(
+        #     "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspCategories/{{tenant_subscription_id}}",
+        #     {"tenant_subscription_id": tenant_subscription_id}
+        # )
+        # categories = make_request(categories_url)
 
         # Step 5: Get CSP offers for each product type and category
-        if product_types and isinstance(product_types, list) and categories and isinstance(categories, list):
-            for product_type in product_types:
-                for category in categories:
-                    offers_url = build_url(
-                        "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
-                        {
-                            "tenant_subscription_id": tenant_subscription_id,
-                            "customer_id": customer_id,
-                            "productTypes": product_type,
-                            "cspOfferCategories": category
-                        }
-                    )
-                    offers = make_request(offers_url)
-                    company_data["offers"].append({
-                        "product_type": product_type,
-                        "category": category,
-                        "offers": offers
-                    })
+       
+        offers_url = build_url(
+            "/api/integrations/{{appId}}/admin/service/billing/csp/companies/getCspOffersBySubscriptionIdFromDb/{{tenant_subscription_id}}/{{customer_id}}",
+            {
+                "tenant_subscription_id": tenant_subscription_id,
+                "customer_id": customer_id,
+                "productTypes": "OnlineServicesNCE",
+            }
+        )
+        offers = make_request(offers_url)
+        company_data["offers"].append({
+            "product_type": "OnlineServicesNCE",
+            "offers": offers
+        })
 
         all_data.append(company_data)
 

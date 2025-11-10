@@ -1,0 +1,446 @@
+[
+  {
+    "company": {
+      "id": "a47bc659-374f-4788-ab48-ace5aba283ba",
+      "text": "Billing Test CSP"
+    },
+    "customer_profile": [
+      {
+        "SubscriptionId": "a47bc659-374f-4788-ab48-ace5aba283ba",
+        "AllowDelegatedAccess": null,
+        "AssociatedPartnerId": null,
+        "CommerceId": null,
+        "Id": "1deb7111-4142-49f1-b962-60d9a6c56e89",
+        "FirstName": null,
+        "LastName": null,
+        "CompanyName": "Billing Test CSP",
+        "Email": "arthis@cloudassert.com",
+        "TenantId": "1deb7111-4142-49f1-b962-60d9a6c56e89",
+        "AddressLine1": "633 228th Ave NE",
+        "AddressLine2": null,
+        "City": "Sammamish",
+        "Region": "WA",
+        "State": "WA",
+        "PostalCode": "98074-7242",
+        "Country": "US",
+        "PhoneNumber": null,
+        "Language": "en",
+        "Culture": "en-US",
+        "Domain": "billingcsptestarthi.onmicrosoft.com",
+        "id": "1deb7111-4142-49f1-b962-60d9a6c56e89",
+        "name": "1deb7111-4142-49f1-b962-60d9a6c56e89",
+        "displayName": " - 1deb7111-4142-49f1-b962-60d9a6c56e89",
+        "WapUserId": "arthis@cloudassert.com",
+        "Status": "Customer Created Successfully",
+        "SignupState": 20,
+        "SignupStateString": "Approved",
+        "Type": "CspCustomerProfile",
+        "RelationshipToPartner": 0,
+        "Qualification": "None",
+        "IsAADConsentGivenForCPVApp": false,
+        "CPVAppPermissionsJson": null,
+        "CspPartnerConnectionId": "fe13b5cd-dba8-436f-b248-5dccbb3d9e80"
+      }
+    ],
+    "licenses": {
+      "CustomerId": "1deb7111-4142-49f1-b962-60d9a6c56e89",
+      "BillingSubscriptionId": "a47bc659-374f-4788-ab48-ace5aba283ba",
+      "CustomerProfileId": 4,
+      "Licenses": [
+        {
+          "LicenseId": "c2273bd0-dff7-4215-9ef5-2c7bcfb06425",
+          "LicenseGroupId": "Group1",
+          "LicenseName": "Microsoft 365 Apps for enterprise",
+          "SkuPartNumber": "OFFICESUBSCRIPTION",
+          "TargetType": "User",
+          "ActiveUnits": 3,
+          "AvailableUnits": 2,
+          "CapabilityStatus": "Enabled",
+          "ConsumedUnits": 1,
+          "SuspendedUnits": 0,
+          "TotalUnits": 3,
+          "WarningUnits": 0,
+          "AssignedUsers": [
+            "admin@billingcsptestarthi.onmicrosoft.com"
+          ]
+        },
+        {
+          "LicenseId": "3b555118-da6a-4418-894f-7df1e2096870",
+          "LicenseGroupId": "Group1",
+          "LicenseName": "Microsoft 365 Business Basic",
+          "SkuPartNumber": "O365_BUSINESS_ESSENTIALS",
+          "TargetType": "User",
+          "ActiveUnits": 1,
+          "AvailableUnits": 1,
+          "CapabilityStatus": "Enabled",
+          "ConsumedUnits": 0,
+          "SuspendedUnits": 0,
+          "TotalUnits": 1,
+          "WarningUnits": 0,
+          "AssignedUsers": []
+        },
+        {
+          "LicenseId": "5e36d0d4-e9e5-4052-aba0-0257465c9b86",
+          "LicenseGroupId": "Group1",
+          "LicenseName": "Microsoft Intune Advanced Analytics",
+          "SkuPartNumber": "Microsoft_Intune_Advanced_Analytics",
+          "TargetType": "User",
+          "ActiveUnits": 0,
+          "AvailableUnits": 0,
+          "CapabilityStatus": "Disabled",
+          "ConsumedUnits": 1,
+          "SuspendedUnits": 1,
+          "TotalUnits": 0,
+          "WarningUnits": 0,
+          "AssignedUsers": [
+            "admin@billingcsptestarthi.onmicrosoft.com"
+          ]
+        },
+        {
+          "LicenseId": "c1d032e0-5619-4761-9b5c-75b6831e1711",
+          "LicenseGroupId": "Group1",
+          "LicenseName": "Power BI Premium Per User",
+          "SkuPartNumber": "PBI_PREMIUM_PER_USER",
+          "TargetType": "User",
+          "ActiveUnits": 1,
+          "AvailableUnits": 1,
+          "CapabilityStatus": "Enabled",
+          "ConsumedUnits": 0,
+          "SuspendedUnits": 0,
+          "TotalUnits": 1,
+          "WarningUnits": 0,
+          "AssignedUsers": []
+        },
+        {
+          "LicenseId": "c5928f49-12ba-48f7-ada3-0d743a3601d5",
+          "LicenseGroupId": "Group1",
+          "LicenseName": "Visio Plan 2",
+          "SkuPartNumber": "VISIOCLIENT",
+          "TargetType": "User",
+          "ActiveUnits": 25,
+          "AvailableUnits": 22,
+          "CapabilityStatus": "Enabled",
+          "ConsumedUnits": 3,
+          "SuspendedUnits": 0,
+          "TotalUnits": 25,
+          "WarningUnits": 0,
+          "AssignedUsers": [
+            "BillingTest@billingcsptestarthi.onmicrosoft.com",
+            "divyar@billingcsptestarthi.onmicrosoft.com",
+            "testadmin@billingcsptestarthi.onmicrosoft.com"
+          ]
+        }
+      ]
+    },
+    "offers": [
+      {
+        "product_type": "OnlineServicesNCE",
+        "offers": {
+          "items": [],
+          "filteredTotalCount": 0,
+          "totalCount": 0
+        }
+      }
+    ]
+  },
+  {
+    "company": {
+      "id": "3c9a7697-a636-4da5-a404-712f77385ef8",
+      "text": "Cloudvalley deployment"
+    },
+    "customer_profile": [
+      {
+        "SubscriptionId": "3c9a7697-a636-4da5-a404-712f77385ef8",
+        "AllowDelegatedAccess": null,
+        "AssociatedPartnerId": null,
+        "CommerceId": null,
+        "Id": "3c190b96-ef53-4081-b151-51ba62754e1a",
+        "FirstName": null,
+        "LastName": null,
+        "CompanyName": "Cloudvalley deployment",
+        "Email": "cloudadmin@cloudiorg.onmicrosoft.com",
+        "TenantId": "3c190b96-ef53-4081-b151-51ba62754e1a",
+        "AddressLine1": "67",
+        "AddressLine2": "Address2",
+        "City": "Sammamish",
+        "Region": "WA",
+        "State": "WA",
+        "PostalCode": "98074-7241",
+        "Country": "US",
+        "PhoneNumber": "7896541320",
+        "Language": "en",
+        "Culture": "en-US",
+        "Domain": "demonewdecember.onmicrosoft.com",
+        "id": "3c190b96-ef53-4081-b151-51ba62754e1a",
+        "name": "3c190b96-ef53-4081-b151-51ba62754e1a",
+        "displayName": " - 3c190b96-ef53-4081-b151-51ba62754e1a",
+        "WapUserId": "cloudadmin@cloudiorg.onmicrosoft.com",
+        "Status": "Customer Created Successfully",
+        "SignupState": 20,
+        "SignupStateString": "Approved",
+        "Type": "CspCustomerProfile",
+        "RelationshipToPartner": 0,
+        "Qualification": "None",
+        "IsAADConsentGivenForCPVApp": false,
+        "CPVAppPermissionsJson": null,
+        "CspPartnerConnectionId": "fe13b5cd-dba8-436f-b248-5dccbb3d9e80"
+      }
+    ],
+    "licenses": {
+      "CustomerId": "3c190b96-ef53-4081-b151-51ba62754e1a",
+      "BillingSubscriptionId": "3c9a7697-a636-4da5-a404-712f77385ef8",
+      "CustomerProfileId": 1,
+      "Licenses": []
+    },
+    "offers": [
+      {
+        "product_type": "OnlineServicesNCE",
+        "offers": {
+          "items": [],
+          "filteredTotalCount": 0,
+          "totalCount": 0
+        }
+      }
+    ]
+  },
+  {
+    "company": {
+      "id": "45abde61-8728-438c-bf95-8eba5c8c511f",
+      "text": "CSP_Test_Company"
+    },
+    "customer_profile": [
+      {
+        "SubscriptionId": "45abde61-8728-438c-bf95-8eba5c8c511f",
+        "AllowDelegatedAccess": null,
+        "AssociatedPartnerId": null,
+        "CommerceId": null,
+        "Id": "4135d023-6c25-439a-9425-9722e9cd285f",
+        "FirstName": null,
+        "LastName": null,
+        "CompanyName": "CSP_Test_Company",
+        "Email": "jananit@cloudassert.com",
+        "TenantId": "4135d023-6c25-439a-9425-9722e9cd285f",
+        "AddressLine1": "12 Lakshmi Nagar -DSP",
+        "AddressLine2": "Address2",
+        "City": "SAMMAMISH",
+        "Region": "WA",
+        "State": "WA",
+        "PostalCode": "98075",
+        "Country": "US",
+        "PhoneNumber": "9876543210",
+        "Language": "en",
+        "Culture": "en-US",
+        "Domain": "CSPTest2305.onmicrosoft.com",
+        "id": "4135d023-6c25-439a-9425-9722e9cd285f",
+        "name": "4135d023-6c25-439a-9425-9722e9cd285f",
+        "displayName": " - 4135d023-6c25-439a-9425-9722e9cd285f",
+        "WapUserId": "jananit@cloudassert.com",
+        "Status": "Customer Created Successfully",
+        "SignupState": 20,
+        "SignupStateString": "Approved",
+        "Type": "CspCustomerProfile",
+        "RelationshipToPartner": 0,
+        "Qualification": "None",
+        "IsAADConsentGivenForCPVApp": false,
+        "CPVAppPermissionsJson": null,
+        "CspPartnerConnectionId": "fe13b5cd-dba8-436f-b248-5dccbb3d9e80"
+      }
+    ],
+    "licenses": {
+      "CustomerId": "4135d023-6c25-439a-9425-9722e9cd285f",
+      "BillingSubscriptionId": "45abde61-8728-438c-bf95-8eba5c8c511f",
+      "CustomerProfileId": 3,
+      "Licenses": []
+    },
+    "offers": [
+      {
+        "product_type": "OnlineServicesNCE",
+        "offers": {
+          "items": [],
+          "filteredTotalCount": 0,
+          "totalCount": 0
+        }
+      }
+    ]
+  },
+  {
+    "company": {
+      "id": "70b39381-7292-4868-a458-5231a1c7d303",
+      "text": "Dhisana AI CA 1"
+    },
+    "customer_profile": [
+      {
+        "SubscriptionId": "70b39381-7292-4868-a458-5231a1c7d303",
+        "AllowDelegatedAccess": null,
+        "AssociatedPartnerId": null,
+        "CommerceId": null,
+        "Id": "b08e7255-7c76-4c17-8409-fe2053ecb3c7",
+        "FirstName": "Hari",
+        "LastName": "S",
+        "CompanyName": "Dhisana AI CA 1",
+        "Email": "hari@dhisana.ai",
+        "TenantId": "b08e7255-7c76-4c17-8409-fe2053ecb3c7",
+        "AddressLine1": "630 228th Ave NE ",
+        "AddressLine2": "",
+        "City": "Sammamish",
+        "Region": null,
+        "State": "WA",
+        "PostalCode": "98074-7241",
+        "Country": "US",
+        "PhoneNumber": "0000000000",
+        "Language": "en",
+        "Culture": "en-US",
+        "Domain": "dhisana1ai.onmicrosoft.com",
+        "id": "b08e7255-7c76-4c17-8409-fe2053ecb3c7",
+        "name": "b08e7255-7c76-4c17-8409-fe2053ecb3c7",
+        "displayName": "Hari - b08e7255-7c76-4c17-8409-fe2053ecb3c7",
+        "WapUserId": "hari@dhisana.ai",
+        "Status": "Customer Created Successfully",
+        "SignupState": 20,
+        "SignupStateString": "Approved",
+        "Type": "CspCustomerProfile",
+        "RelationshipToPartner": 0,
+        "Qualification": "None",
+        "IsAADConsentGivenForCPVApp": false,
+        "CPVAppPermissionsJson": null,
+        "CspPartnerConnectionId": "fe13b5cd-dba8-436f-b248-5dccbb3d9e80"
+      }
+    ],
+    "licenses": {
+      "CustomerId": "b08e7255-7c76-4c17-8409-fe2053ecb3c7",
+      "BillingSubscriptionId": "70b39381-7292-4868-a458-5231a1c7d303",
+      "CustomerProfileId": 6,
+      "Licenses": []
+    },
+    "offers": [
+      {
+        "product_type": "OnlineServicesNCE",
+        "offers": {
+          "items": [],
+          "filteredTotalCount": 0,
+          "totalCount": 0
+        }
+      }
+    ]
+  },
+  {
+    "company": {
+      "id": "13cecc96-a87c-4fd0-96ca-ea7227c7d02b",
+      "text": "Dhisana AI CA 2"
+    },
+    "customer_profile": [
+      {
+        "SubscriptionId": "13cecc96-a87c-4fd0-96ca-ea7227c7d02b",
+        "AllowDelegatedAccess": null,
+        "AssociatedPartnerId": null,
+        "CommerceId": null,
+        "Id": "cd90ad73-b42d-4ff1-8d02-e3013fe866b4",
+        "FirstName": "Madhukar",
+        "LastName": "D",
+        "CompanyName": "Dhisana AI CA 2",
+        "Email": "madhu@dhisana.ai",
+        "TenantId": "cd90ad73-b42d-4ff1-8d02-e3013fe866b4",
+        "AddressLine1": "630 228th Ave NE ",
+        "AddressLine2": "",
+        "City": "Sammamish",
+        "Region": null,
+        "State": "WA",
+        "PostalCode": "98074-7241",
+        "Country": "US",
+        "PhoneNumber": "0000000000",
+        "Language": "en",
+        "Culture": "en-US",
+        "Domain": "dhisana2ai.onmicrosoft.com",
+        "id": "cd90ad73-b42d-4ff1-8d02-e3013fe866b4",
+        "name": "cd90ad73-b42d-4ff1-8d02-e3013fe866b4",
+        "displayName": "Madhukar - cd90ad73-b42d-4ff1-8d02-e3013fe866b4",
+        "WapUserId": "madhu@dhisana.ai",
+        "Status": "Customer Created Successfully",
+        "SignupState": 20,
+        "SignupStateString": "Approved",
+        "Type": "CspCustomerProfile",
+        "RelationshipToPartner": 0,
+        "Qualification": "None",
+        "IsAADConsentGivenForCPVApp": false,
+        "CPVAppPermissionsJson": null,
+        "CspPartnerConnectionId": "fe13b5cd-dba8-436f-b248-5dccbb3d9e80"
+      }
+    ],
+    "licenses": {
+      "CustomerId": "cd90ad73-b42d-4ff1-8d02-e3013fe866b4",
+      "BillingSubscriptionId": "13cecc96-a87c-4fd0-96ca-ea7227c7d02b",
+      "CustomerProfileId": 5,
+      "Licenses": []
+    },
+    "offers": [
+      {
+        "product_type": "OnlineServicesNCE",
+        "offers": {
+          "items": [],
+          "filteredTotalCount": 0,
+          "totalCount": 0
+        }
+      }
+    ]
+  },
+  {
+    "company": {
+      "id": "cda9b52d-5043-4fd5-960a-6853a46cf3ba",
+      "text": "Everest Hub"
+    },
+    "customer_profile": [
+      {
+        "SubscriptionId": "cda9b52d-5043-4fd5-960a-6853a46cf3ba",
+        "AllowDelegatedAccess": null,
+        "AssociatedPartnerId": null,
+        "CommerceId": null,
+        "Id": "40068813-d26e-4d01-aada-b4af60eb9f5d",
+        "FirstName": null,
+        "LastName": null,
+        "CompanyName": "Everest Hub",
+        "Email": "dominicjcj@cloudassert.com",
+        "TenantId": "40068813-d26e-4d01-aada-b4af60eb9f5d",
+        "AddressLine1": "630 228th Ave NE",
+        "AddressLine2": null,
+        "City": "Sammamish",
+        "Region": "WA",
+        "State": "WA",
+        "PostalCode": "98074-7241",
+        "Country": "US",
+        "PhoneNumber": "9898989897",
+        "Language": "en",
+        "Culture": "en-US",
+        "Domain": "everesthub.onmicrosoft.com",
+        "id": "40068813-d26e-4d01-aada-b4af60eb9f5d",
+        "name": "40068813-d26e-4d01-aada-b4af60eb9f5d",
+        "displayName": " - 40068813-d26e-4d01-aada-b4af60eb9f5d",
+        "WapUserId": "dominicjcj@cloudassert.com",
+        "Status": "Customer Created Successfully",
+        "SignupState": 20,
+        "SignupStateString": "Approved",
+        "Type": "CspCustomerProfile",
+        "RelationshipToPartner": 0,
+        "Qualification": "None",
+        "IsAADConsentGivenForCPVApp": false,
+        "CPVAppPermissionsJson": null,
+        "CspPartnerConnectionId": "fe13b5cd-dba8-436f-b248-5dccbb3d9e80"
+      }
+    ],
+    "licenses": {
+      "CustomerId": "40068813-d26e-4d01-aada-b4af60eb9f5d",
+      "BillingSubscriptionId": "cda9b52d-5043-4fd5-960a-6853a46cf3ba",
+      "CustomerProfileId": 2,
+      "Licenses": []
+    },
+    "offers": [
+      {
+        "product_type": "OnlineServicesNCE",
+        "offers": {
+          "items": [],
+          "filteredTotalCount": 0,
+          "totalCount": 0
+        }
+      }
+    ]
+  }
+]
